@@ -1,0 +1,99 @@
+using System;
+using System.Collections.Generic;
+
+namespace ColegioDiosEsBueno
+{
+    class Estudiante
+    {
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public double Nota1 { get; set; }
+        public double Nota2 { get; set; }
+        public double Nota3 { get; set; }
+        public double Nota4 { get; set; }
+
+        public double Promedio => (Nota1 + Nota2 + Nota3 + Nota4) / 4.0;
+
+        public string Literal
+        {
+            get
+            {
+                double p = Promedio;
+                if (p >= 90) return "A";
+                if (p >= 80) return "B";
+                if (p >= 70) return "C";
+                return "F"; // Según las reglas académicas estándar (o "D" si se requiere específicamente)
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<Estudiante> listaEstudiantes = new List<Estudiante>();
+
+            Console.WriteLine("==========================================================");
+            Console.WriteLine("                Colegio Dios es bueno                     ");
+            Console.WriteLine("            Calificaciones del cuatrimestre               ");
+            Console.WriteLine("==========================================================");
+
+            Console.Write("\n¿Cuántos estudiantes deseas registrar?: ");
+            int cantidad;
+            while (!int.TryParse(Console.ReadLine(), out cantidad) || cantidad <= 0)
+            {
+                Console.Write("Por favor, ingresa una cantidad válida: ");
+            }
+
+            for (int i = 0; i < cantidad; i++)
+            {
+                Console.WriteLine($"\n--- Datos del Estudiante #{i + 1} ---");
+                Estudiante est = new Estudiante();
+
+                Console.Write("Nombre: ");
+                est.Nombre = Console.ReadLine();
+
+                Console.Write("Apellido: ");
+                est.Apellido = Console.ReadLine();
+
+                est.Nota1 = LeerNota("Nota 1: ");
+                est.Nota2 = LeerNota("Nota 2: ");
+                est.Nota3 = LeerNota("Nota 3: ");
+                est.Nota4 = LeerNota("Nota 4: ");
+
+                listaEstudiantes.Add(est);
+            }
+
+            // Reporte en formato tabla
+            Console.Clear();
+            Console.WriteLine("========================================================================================");
+            Console.WriteLine("                                Colegio Dios es bueno                                  ");
+            Console.WriteLine("                            Calificaciones del cuatrimestre                             ");
+            Console.WriteLine("========================================================================================");
+            Console.WriteLine("{0,-12} {1,-12} {2,-8} {3,-8} {4,-8} {5,-8} {6,-10} {7,-8}", 
+                              "Nombre", "Apellido", "Nota1", "Nota2", "Nota3", "Nota4", "Promedio", "Literal");
+            Console.WriteLine("========================================================================================");
+
+            foreach (var est in listaEstudiantes)
+            {
+                Console.WriteLine("{0,-12} {1,-12} {2,-8} {3,-8} {4,-8} {5,-8} {6,-10:F2} {7,-8}", 
+                                  est.Nombre, est.Apellido, est.Nota1, est.Nota2, est.Nota3, est.Nota4, est.Promedio, est.Literal);
+            }
+
+            Console.WriteLine("========================================================================================");
+            Console.WriteLine("\nPresiona cualquier tecla para finalizar...");
+            Console.ReadKey();
+        }
+
+        static double LeerNota(string mensaje)
+        {
+            double nota;
+            Console.Write(mensaje);
+            while (!double.TryParse(Console.ReadLine(), out nota) || nota < 0 || nota > 100)
+            {
+                Console.Write("Nota inválida (debe estar entre 0 y 100). Intenta de nuevo: ");
+            }
+            return nota;
+        }
+    }
+}

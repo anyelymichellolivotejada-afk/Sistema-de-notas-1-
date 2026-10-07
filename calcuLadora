@@ -1,0 +1,124 @@
+using System;
+
+namespace CalculadoraConsola
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool continuar = true;
+
+            while (continuar)
+            {
+                Console.Clear();
+                Console.WriteLine("=================================");
+                Console.WriteLine("     CALCULADORA EN CONSOLA      ");
+                Console.WriteLine("=================================");
+                Console.WriteLine("1. Sumar");
+                Console.WriteLine("2. Restar");
+                Console.WriteLine("3. Multiplicar");
+                Console.WriteLine("4. Dividir");
+                Console.WriteLine("5. Raíz Cuadrada");
+                Console.WriteLine("6. Salir");
+                Console.WriteLine("=================================");
+                Console.Write("Selecciona una opción (1-6): ");
+
+                string opcion = Console.ReadLine();
+
+                if (opcion == "6")
+                {
+                    continuar = false;
+                    Console.WriteLine("\n¡Hasta luego!");
+                    break;
+                }
+
+                switch (opcion)
+                {
+                    case "1":
+                        EjecutarOperacion("Suma", (a, b) => a + b);
+                        break;
+                    case "2":
+                        EjecutarOperacion("Resta", (a, b) => a - b);
+                        break;
+                    case "3":
+                        EjecutarOperacion("Multiplicación", (a, b) => a * b);
+                        break;
+                    case "4":
+                        EjecutarDivision();
+                        break;
+                    case "5":
+                        EjecutarRaizCuadrada();
+                        break;
+                    default:
+                        Console.WriteLine("\nOpción no válida. Presiona cualquier tecla para reintentar...");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        static double LeerNumero(string mensaje)
+        {
+            double numero;
+            Console.Write(mensaje);
+            while (!double.TryParse(Console.ReadLine(), out numero))
+            {
+                Console.Write("Entrada inválida. Ingresa un número válido: ");
+            }
+            return numero;
+        }
+
+        static void EjecutarOperacion(string nombreOperacion, Func<double, double, double> operacion)
+        {
+            Console.WriteLine($"\n--- {nombreOperacion} ---");
+            double num1 = LeerNumero("Ingresa el primer número: ");
+            double num2 = LeerNumero("Ingresa el segundo número: ");
+            
+            double resultado = operacion(num1, num2);
+            Console.WriteLine($"\nResultado: {num1} {(nombreOperacion == "Suma" ? "+" : nombreOperacion == "Resta" ? "-" : "*")} {num2} = {resultado}");
+            
+            Pausar();
+        }
+
+        static void EjecutarDivision()
+        {
+            Console.WriteLine("\n--- División ---");
+            double num1 = LeerNumero("Ingresa el dividendo: ");
+            double num2 = LeerNumero("Ingresa el divisor: ");
+
+            if (num2 == 0)
+            {
+                Console.WriteLine("\nError: No se puede dividir entre cero.");
+            }
+            else
+            {
+                Console.WriteLine($"\nResultado: {num1} / {num2} = {num1 / num2}");
+            }
+
+            Pausar();
+        }
+
+        static void EjecutarRaizCuadrada()
+        {
+            Console.WriteLine("\n--- Raíz Cuadrada ---");
+            double num = LeerNumero("Ingresa el número: ");
+
+            if (num < 0)
+            {
+                Console.WriteLine("\nError: No se puede calcular la raíz cuadrada de un número negativo en números reales.");
+            }
+            else
+            {
+                Console.WriteLine($"\nResultado: √{num} = {Math.Sqrt(num)}");
+            }
+
+            Pausar();
+        }
+
+        static void Pausar()
+        {
+            Console.WriteLine("\nPresiona cualquier tecla para volver al menú...");
+            Console.ReadKey();
+        }
+    }
+}
